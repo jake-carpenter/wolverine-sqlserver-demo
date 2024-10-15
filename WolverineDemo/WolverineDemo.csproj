@@ -8,4 +8,10 @@
         <NoDefaultLaunchSettingsFile>True</NoDefaultLaunchSettingsFile>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="WolverineFx" Version="2.17.2" />
+      <PackageReference Include="WolverineFx.Http" Version="2.17.2" />
+      <PackageReference Include="WolverineFx.SqlServer" Version="2.17.2" />
+    </ItemGroup>
+
 </Project>

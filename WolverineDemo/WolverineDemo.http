@@ -1,0 +1,9 @@
+@WolverineDemo_HostAddress = http://localhost:5000
+
+POST {{WolverineDemo_HostAddress}}/foo
+Accept: application/json
+Content-Type: application/json
+
+{
+  "value": "bar"
+}
