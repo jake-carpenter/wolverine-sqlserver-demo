@@ -1,31 +1,21 @@
+using Wolverine;
 using Wolverine.Http;
 
 namespace WolverineDemo;
 
 public record SubmitFooBody(string Value);
 
-public class FooEndpoint(ILogger<FooEndpoint> logger)
+public class FooEndpoint(ILogger<FooEndpoint> logger, IMessageBus bus)
 {
     [WolverinePost("/foo")]
-    public (IResult, SpeakFooAfterDelay) Handle(SubmitFooBody body)
+    public async Task<IResult> Handle(SubmitFooBody body)
     {
-        logger.LogInformation("Entered FooEndpoint");
-        var msg = new SpeakFooAfterDelay(body.Value);
-        logger.LogInformation("Leaving FooEndpoint");
+        logger.LogDebug($"➡️Entered {nameof(FooEndpoint)}");
+        var msg = new FooSubmitted(body.Value);
+        await bus.SendAsync(msg);
         
-        return (Results.Ok(), msg);
-    }
-}
+        logger.LogDebug($"⬅️Leaving {nameof(FooEndpoint)}");
 
-public record SpeakFooAfterDelay(string Value);
-
-public class SpeakFooAfterDelayHandler
-{
-    public async Task Handle(SpeakFooAfterDelay msg, ILogger logger)
-    {
-        logger.LogInformation($"Entered {nameof(SpeakFooAfterDelayHandler)}");
-        await Task.Delay(5000);
-        Console.WriteLine($"{msg.Value}");
-        logger.LogInformation($"Leaving {nameof(SpeakFooAfterDelayHandler)}");
+        return Results.Ok();
     }
 }
